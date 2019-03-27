@@ -1,6 +1,6 @@
  
 
-# Cheetsheat
+# Cheatsheet
 
 
 
