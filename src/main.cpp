@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
+#include <effects.h>
 
 /*
  * Zuerst müssen wir dem Programm sagen an welchen Pad Nummern 
@@ -54,7 +55,6 @@
 Adafruit_NeoPixel flora_pixel = Adafruit_NeoPixel(1, FLORA_PIXEL, NEO_GRB + NEO_KHZ800); 
 
 
-
 /*
  * Nun müssen die Pixel noch leuchten. Also zuerst einmal das einzelne auf dem Flora.
  * Dazu müssen wir es initialisieren. Das machen wir in der Funktion 'setup'.
@@ -95,10 +95,43 @@ Adafruit_NeoPixel flora_pixel = Adafruit_NeoPixel(1, FLORA_PIXEL, NEO_GRB + NEO_
    * Vergisst du es, wird das Pixel nicht oder in der vorherigen Farbe leuchten.
    */
   flora_pixel.show();
+
+  /*
+   * Damit du auch siehst was für eine Farbe du gesetzt hast ist es manchmal, z.b. wenn du danach die Farbe wieder
+   * ändern möchtest, sinnvoll den Programmablauf zu verzögern. Das tust du mit:
+   * 
+   * delay(<ZeitInMillisekunden>);
+   */
+  delay(2000);  // Das entspricht einer Verzögerung von 2 Sekunden
 }
 
 
-
+/*
+ * Die eigentliche Programmierung deines Floras findet allerdings hier statt, im "loop".
+ * Das ist eine Schleife, die unendlich oft hintereinander durchlaufen wird. In ihr kannst du deinen Pixeln 
+ * einen Ablauf vorgeben und bestimmen wie sie sich verhalten sollen.
+ * 
+ * Dazu kannst du entweder wie oben im "setup" bestimmte Pixel leuchten lassen und über Verzögerungen Abläufe programmieren,
+ * oder du benutzt Effekte, die wir dir vorbereitet haben.
+ * 
+ * Achtung: Die Befehle im "loop" werden hintereinander und nicht gleichzeitig ausgeführt!
+ * Wenn du beispielsweise den Regenbogen Effekt für den internen und die externen Pixel benutzen möchtest wird er erst für das eine und
+ * danach für das/die anderen Pixel durchlaufen.
+ */
 void loop() {
-  // put your main code here, to run repeatedly:
+  /*
+   * Den Regenbogen Effekt kannst du nur auf alle Pixel an einem Pad anwenden, also auf einen Neopixel Namen im Ganzen.
+   * Du startest ihn, indem du "Regenbogen(&<Pixelname>, <Zeitdauer>);" schreibst. Wichtig ist dabei das "&" vor dem 
+   * Namen. Mit der Zeitdauer gibst du an, wie lange eine einzelne Farbe gehalten werden soll bevor der Übergang zur nächsten erfolgt.
+   */ 
+  Regenbogen(&flora_pixel, 50);
+
+  /*
+   * Der Blinken Effekt ist nur eine Vereinfachung. Eigentlich kannst du auch mit Hilfe der Befehle die du schon kennst ein Pixel 
+   * blinken lassen.
+   * Der Befehl funktioniert indem du angibtst welches Pixelreihe und welches einzelne Pixel davon du blinken lassen möchtest.
+   * Danach musst du noch angeben in welchen zwei Farben das Pixel blinken soll und wie lange die Farben gehalten werden.
+   * Das ganze sieht dann so aus: "Blinken(&<Pixelname>, <PixelNummer>, <Farbe1>, <Farbe2>, <Zeitdauer>);"
+   */
+  Blinken(&flora_pixel, 3, flora_pixel.Color(255, 0, 0), flora_pixel.Color(255, 100, 0), 2000);
 }
